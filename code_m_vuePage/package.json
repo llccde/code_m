@@ -1,5 +1,5 @@
 {
-  "name": "code-m",
+  "name": "code-m-vuepage",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -14,10 +14,7 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
-    "cnpm": "^9.4.0",
-    "electron": "^38.2.2",
-    "vue": "^3.5.22",
-    "vue-router": "^4.5.1"
+    "vue": "^3.5.22"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.2",
