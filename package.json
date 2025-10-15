@@ -1,7 +1,9 @@
 {
   "dependencies": {
     "cnpm": "^9.4.0",
-    "electron": "^38.2.2"
+    "electron": "^38.2.2",
+    "vue": "^3.5.22",
+    "vue-cli": "^2.9.6"
   },
   "name": "code_m",
   "version": "1.0.0",
