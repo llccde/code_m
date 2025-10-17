@@ -1,6 +1,11 @@
 const { app, BrowserWindow } = require('electron')
 const path = require('path')
 const isDev = process.argv.includes('--dev');
+
+require('electron-reload')(path.join(__dirname, 'dist'), {
+  electron: path.join(__dirname,'..', 'node_modules', '.bin', 'electron')
+});
+
 function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 1200,
@@ -10,6 +15,7 @@ function createWindow() {
       contextIsolation: true,
     },
   })
+  console.log('isDev:', isDev);
     if (!isDev) {
     mainWindow.loadFile(path.join(__dirname, '../dist/index.html'))
     }
