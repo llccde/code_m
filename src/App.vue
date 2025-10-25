@@ -7,6 +7,7 @@ import BodyToolBar from './components/com-body-toolBar.vue'
 import CodePageNav from './components/com-code-page-nav.vue'    
 import CodeRunOutput from './components/com-code-run-output.vue'
 import ComHead from './components/com-head.vue'
+import comBodyCodeViewAndNav from './components/com-body-codeView-and-nav.vue'
 import ResizeBar from './components/ResizeBar.vue'
 import { onMounted,computed } from 'vue'
 import { ref } from 'vue'
@@ -16,8 +17,8 @@ const com_body_left_width=ref(200);
 const com_code_run_output_hight=ref(200);
 const change_body_left_width=(d)=>{
     com_body_left_width.value+=d;
-    if(com_body_left_width.value<120){
-        com_body_left_width.value=120;
+    if(com_body_left_width.value<200){
+        com_body_left_width.value=200;
     }
     if(com_body_left_width.value>0.8*document.body.clientWidth){
         com_body_left_width.value=0.8*document.body.clientWidth
@@ -106,7 +107,7 @@ onMounted(()=>{
         flex-direction: column;
         background-color: rgb(93, 124, 156);
         width: 100%;
-        height: 50px;
+        height: 35px;
     }
     .com-code-view{
         width: 100%;
@@ -134,19 +135,18 @@ onMounted(()=>{
                     <div class="com-body-fileView" leaf="true">
                         <BodyFileView></BodyFileView>
                     </div>    
-                    <ResizeBar @be_drag="change_body_left_width" :verticalDrag="false" style="width: 5px;min-width: 5px;z-index: 1000;;height: 100%;cursor: e-resize;"></ResizeBar>
+                    <ResizeBar @be_drag="change_body_left_width" :verticalDrag="false" style="width: 2px;min-width: 5px;z-index: 1000;;height: 100%;cursor: e-resize;"></ResizeBar>
                 </div>
                 <div class="com-body-right" >
-                    <div class="com-body-codeView-and-nav" >
-
+                    <comBodyCodeViewAndNav class="com-body-codeView-and-nav" >
                         <div class="com-code-page-nav" leaf="true">
                             <CodePageNav></CodePageNav>
                         </div>
                         <div class="com-code-view" leaf="true">
                             <CodeView></CodeView>
                         </div>
-                    </div>
-                    <ResizeBar @be_drag="change_output_hight" :verticalDrag="true" style="width: 100%;min-height: 5px;z-index: 1000;;height: 5px;cursor: n-resize;"></ResizeBar>
+                    </comBodyCodeViewAndNav>
+                    <ResizeBar @be_drag="change_output_hight" :verticalDrag="true" style="width: 100%;min-height: 3px;z-index: 1000;;height: 2px;cursor: n-resize;"></ResizeBar>
                     <div class="com-code-run-output" :style="{height:com_code_run_output_hight+'px'}" leaf="true">
                         <CodeRunOutput></CodeRunOutput>
                     </div>

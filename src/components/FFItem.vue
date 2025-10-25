@@ -1,12 +1,13 @@
 <script setup lang="ts">
     import{computed, ref,type ComputedRef} from "vue"
-    import { useFileStore ,FileOrFolder,type BaseNode, type FolderNode} from "@/m_data";
+    import { useFileStore ,FileOrFolder,type BaseNode, type FolderNode, type FileNode} from "@/m_data";
     import { inject } from "vue";
+    import { openedFilesStore } from "./coedEditor";
     import { type fileViewApiType } from "./com-body-fileView.vue";
 
     const paddingSize = ref(20)
     const fileView:fileViewApiType|undefined = inject("fileViewSetting")
-
+    const m_openedFilesStore = openedFilesStore()
     const m_fileStore=useFileStore()
     const props = defineProps({
         path:String,
@@ -41,10 +42,7 @@
             return temp;
         }
     } 
-    const closeMe=temp();
-    
-
-    
+    const closeMe=computed(temp);
     const children:ComputedRef<Array<string>> = computed(()=>{
         if(me!=null){
             if(isFolder.value){
@@ -56,20 +54,22 @@
             else{
                 return [] as Array<string>
             }
-            
         }
         else{
             throw Error("impossible! file item is null!")
         }
         
     })
-    const childrenDiv = ref(null);
     const clickItem=()=>{
         if(isFolder.value){
-            closeMe.value = !closeMe.value; // 移除setTimeout，直接修改
+            closeMe.value.value = !closeMe.value.value; // 移除setTimeout，直接修改
         }
         else{
-
+            m_openedFilesStore.openFile(me.value?.name as string,props.path as string);
+            m_openedFilesStore.bufferContent(props.path as string,(me.value as FileNode).content)
+            
+            m_openedFilesStore.setCurrentPage(props.path as string)
+            
         }
     }
 </script>
@@ -84,7 +84,7 @@
                 {{ me?.name }}
             </p>
         </div>
-        <div name="children" v-if="!closeMe" ref="childrenDiv"  class="items-in-item">
+        <div name="children" v-if="!closeMe.value" ref="childrenDiv"  class="items-in-item">
             <template v-for="childPath in children"> 
                 <FFItem :path="childPath" :depth="depth+1">
 

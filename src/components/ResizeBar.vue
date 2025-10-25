@@ -33,7 +33,7 @@
 </script>
 <style scoped>
     .resize-bar{
-        background-color: gray;
+        background-color: rgb(92, 91, 91);
     }
 </style>
 <template>
