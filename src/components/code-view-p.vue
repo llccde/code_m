@@ -2,6 +2,7 @@
     import { ref,type Ref,defineProps,computed,type ComputedRef } from 'vue'
     import { openedFilesStore, type openedFile } from './coedEditor';
     import { FileOrFolder, useFileStore,type FileNode} from '@/m_data';
+    import { getSingletonHighlighter } from 'shiki';
     const openedFiles = openedFilesStore();
     const fileStore = useFileStore();
     const props = defineProps({
@@ -18,7 +19,7 @@
             return open;
         }
     })as ComputedRef<Ref<openedFile>>
-    
+    const currentCode = currentFile.value.value.content.join("\n");
 
 </script>
 <template>

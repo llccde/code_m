@@ -93,12 +93,14 @@ onMounted(()=>{
         flex-direction: column;
         height: 100%;
         flex: 1;
+        min-width: 0;
         background-color: rgb(137, 152, 152);
     }
     .com-body-codeView-and-nav{
         display: flex;
         flex-direction: column;
         width: 100%;
+        min-height: 0;
         flex: 1;
         background-color: rgb(86, 141, 141);
     }
@@ -110,8 +112,10 @@ onMounted(()=>{
         height: 35px;
     }
     .com-code-view{
+        position: relative;
         width: 100%;
         flex: 1;
+        min-height: 0;
         background-color: rgb(74, 143, 126);
     }
 

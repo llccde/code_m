@@ -5,7 +5,7 @@ export type openedFile={
     name:String ;
     saved:boolean;
     path:string;
-    content:Ref<string>[];
+    content:string;
     
 }
 export const openedFilesStore=defineStore("openedFilesStore",()=>{
@@ -15,6 +15,11 @@ export const openedFilesStore=defineStore("openedFilesStore",()=>{
             return f.value.path;
         })
     }) 
+    const getNameOf = (path:string)=>{
+        if(openedPaths.value.findIndex(f=> f==path)==-1){
+            
+        }
+    }
     const currentPage:Ref<string|null> = ref(null)
     const setCurrentPage = (data:string|null)=>{
         if(data!=null&&openedFiles.value.findIndex(p=>p.value.path==data) == -1){
@@ -30,8 +35,8 @@ export const openedFilesStore=defineStore("openedFilesStore",()=>{
         if(!file){
             throw Error("file not open");
         }
-        var data = content.split("\n").map(data=>ref(data));
-        file.value.content = data;
+        
+        file.value.content = content;
         
     }
     const openFile:(name:string,path:string)=>Ref<openedFile> = (name = "",path)=>{
@@ -51,11 +56,11 @@ export const openedFilesStore=defineStore("openedFilesStore",()=>{
             name:name!=""?name:n,
             saved:true,
             path:path,
-            content:[]
+            content:""
 
         }
-        var t = ref(temp)
-        openedFiles.value.push(t)
+        var t:Ref<openedFile> = ref(temp)
+        openedFiles.value.push(t as Ref<openedFile>)
         return t;
     }
     const getFile=(path:string)=>{
@@ -82,5 +87,5 @@ export const openedFilesStore=defineStore("openedFilesStore",()=>{
 
         }
     }
-    return{openedFiles,openFile,closeFile,getFile,bufferContent,currentPage,setCurrentPage}
+    return{openedFiles,openFile,closeFile,getFile,bufferContent,currentPage,setCurrentPage,openedPaths}
 })

@@ -15,14 +15,17 @@
     const closeClick = ()=>{
         opened.closeFile(props.file.path)
     }
+    const choiceMe = ()=>{
+        opened.setCurrentPage(props.file.path)
+    }
     
 </script>
 <template>
-    <div :class="['button-root',opened.currentPage == props.file.path?'be-choice':'']">
+    <div :class="['button-root',opened.currentPage == props.file.path?'be-choice':'']" @click="choiceMe">
         <div class="file-name">
             {{props.file.name}}
         </div>
-        <div class="close-button" style="font-weight: lighter; " @click="closeClick">
+        <div class="close-button" style="font-weight: lighter; " @click.stop="closeClick">
             ⨉
         </div>
     </div>

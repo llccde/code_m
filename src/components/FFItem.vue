@@ -79,7 +79,7 @@
         <div name="ffItem" class="item-self">
             <p class="item-name" :style="{'padding-left': depth*paddingSize+'px' }" @click="clickItem">
                 <p v-if="isFolder">
-                    {{ closeMe ? '▶' : '▼' }}
+                    {{ closeMe.value ? '▶' : '▼' }}
                 </p>
                 {{ me?.name }}
             </p>

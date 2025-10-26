@@ -2,7 +2,7 @@
     import nav_button from './nav_button.vue';
     import { openedFilesStore } from './coedEditor';
     const opens = openedFilesStore();
-    if(opens.openedFiles)
+    if(opens.openedFiles){}
 </script>
 <template>
     <div class="com-root">

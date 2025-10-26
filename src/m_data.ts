@@ -33,6 +33,7 @@ export interface openedFile{
     saved:boolean;
     name:string;
 }
+
 // 创建默认文件结构
 const createDefaultFile = (): FolderNode => {
     const defaultFile: FolderNode = {
@@ -50,6 +51,16 @@ const createDefaultFile = (): FolderNode => {
                         type: FileOrFolder.File,
                         name: "main.py",
                         content: 'a=1124\nprint("hello"+a)\nif(true):\n    a=2233\n    a++'
+                    },
+                    {
+                        parent: null,
+                        type: FileOrFolder.File,
+                        name: "code.js",
+                        content: [
+                            "const a:Number=114514;",
+                            "var add=(a,b)=>{return a+b;}",
+                            "console.log(add(a,23333))"    
+                        ].join("\n")
                     }
                 ]
             },
@@ -157,7 +168,15 @@ export const useFileStore = defineStore("fileData", () => {
         }
         return (result.f as FolderNode).children;
     }
-
+    const getNameOf=(path:string)=>{
+        try{
+            var f= resolvePath(path);
+            if(f == null){return null}
+            else return (f as unknown  as BaseNode).name;
+        }catch{
+            return null
+        }
+    }
     // 添加文件/文件夹的方法
     const addFile = (path: string, name: string, content: string = ''): void => {
         const result = resolvePath(path);
@@ -183,6 +202,7 @@ export const useFileStore = defineStore("fileData", () => {
         resolvePath,
         getFileContent,
         getFolderChildren,
-        addFile
+        addFile,
+        getNameOf
     };
 });
