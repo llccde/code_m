@@ -77,12 +77,15 @@
 <template>
     <div name="container">
         <div name="ffItem" class="item-self">
-            <p class="item-name" :style="{'padding-left': depth*paddingSize+'px' }" @click="clickItem">
+            <div class="item-name" :style="{'padding-left': depth*paddingSize+'px' }" @click="clickItem">
                 <p v-if="isFolder">
                     {{ closeMe.value ? '▶' : '▼' }}
                 </p>
-                {{ me?.name }}
-            </p>
+                <p>
+                    {{ me?.name }}
+                </p>
+                
+            </div>
         </div>
         <div name="children" v-if="!closeMe.value" ref="childrenDiv"  class="items-in-item">
             <template v-for="childPath in children"> 
