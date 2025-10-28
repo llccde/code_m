@@ -21,19 +21,21 @@ provide("fileViewSetting",fileViewApi)
 
 </script>
 <style lang="css" scoped>
+    .title {
+        width: 100%;
+        font-size: medium;
+        border-bottom: 3px solid var(--border-color, black);
+        padding: 8px 0 8px 7px;
+        box-sizing: border-box;
+    }
     .root-items{
         width: 100%;
         height: 100%;
         --tab-size:20px;
         color: rgb(127, 127, 127);
-        background-color: rgb(42, 42, 42);
+        background-color: var(--bg-color);
     }
-    .title{
-        width: 100%;
-        font-size: medium;
-        border-bottom: 3px solid black;
-        padding-left: 7px;
-    }
+
 </style>
 <template>
     <div class="root-items" style="">

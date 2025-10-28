@@ -1,6 +1,5 @@
 <script setup lang="js">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+
 import CodeView from './components/com-code-view.vue'
 import BodyFileView from './components/com-body-fileView.vue'
 import BodyToolBar from './components/com-body-toolBar.vue'
@@ -11,14 +10,15 @@ import comBodyCodeViewAndNav from './components/com-body-codeView-and-nav.vue'
 import ResizeBar from './components/ResizeBar.vue'
 import { onMounted,computed } from 'vue'
 import { ref } from 'vue'
-
-
-const com_body_left_width=ref(200);
+import makeTheme from './components/make-theme.vue'
+import toolShow from './components/tool-show.vue'
+import comBodyThemeView from './components/com-body-themeView.vue'
+const com_body_left_width=ref(300);
 const com_code_run_output_hight=ref(200);
 const change_body_left_width=(d)=>{
     com_body_left_width.value+=d;
-    if(com_body_left_width.value<200){
-        com_body_left_width.value=200;
+    if(com_body_left_width.value<300){
+        com_body_left_width.value=300;
     }
     if(com_body_left_width.value>0.8*document.body.clientWidth){
         com_body_left_width.value=0.8*document.body.clientWidth
@@ -33,8 +33,10 @@ const change_output_hight=(d)=>{
         com_code_run_output_hight.value=0.6*document.body.clientHeight
     }
 }
-
-
+const theChoiceToolView=ref(0);
+const choice = (id)=>{
+    theChoiceToolView.value=id;
+}
 onMounted(()=>{
     console.log("App mounted");
 
@@ -50,6 +52,7 @@ onMounted(()=>{
         position: relative;
         width: 100%;
         height: 100%;
+        max-width: none;
     }
     .components{
         width: 100%;
@@ -79,8 +82,8 @@ onMounted(()=>{
     }
     .com-body-toolBar{
         height: 100%;
-        width: 40px;
-        background-color: rgb(169, 160, 115);
+        width: 60px;
+        background-color: rgb(52, 52, 52)
 
     }
     .com-body-fileView{
@@ -116,7 +119,7 @@ onMounted(()=>{
         width: 100%;
         flex: 1;
         min-height: 0;
-        background-color: rgb(74, 143, 126);
+        background-color:  rgb(from var(--bg-color) calc(r*1.3) calc(g*1.3) calc(b*1.3));
     }
 
     .com-code-run-output{
@@ -126,6 +129,7 @@ onMounted(()=>{
 </style>
 <template>
     <div class="page-root">
+        <makeTheme>
         <div class="components">
             <div class="com-head"  leaf="true">
                 <ComHead></ComHead>
@@ -134,10 +138,18 @@ onMounted(()=>{
             <div class="com-body" >
                 <div class="com-body-left" :style="{width:com_body_left_width+'px'}" >
                     <div class="com-body-toolBar"  leaf="true">
-                        <BodyToolBar></BodyToolBar>
+                        <BodyToolBar @choiceToolView="choice"></BodyToolBar>
                     </div>
                     <div class="com-body-fileView" leaf="true">
-                        <BodyFileView></BodyFileView>
+                        <toolShow :pages="2" :choice="theChoiceToolView">
+                            <template v-slot:s0>
+                                <BodyFileView></BodyFileView>
+                            </template>
+                            <template v-slot:s1>
+                                <comBodyThemeView>   
+                                </comBodyThemeView>
+                            </template>
+                        </toolShow>
                     </div>    
                     <ResizeBar @be_drag="change_body_left_width" :verticalDrag="false" style="width: 2px;min-width: 5px;z-index: 1000;;height: 100%;cursor: e-resize;"></ResizeBar>
                 </div>
@@ -150,13 +162,13 @@ onMounted(()=>{
                             <CodeView></CodeView>
                         </div>
                     </comBodyCodeViewAndNav>
-                    <ResizeBar @be_drag="change_output_hight" :verticalDrag="true" style="width: 100%;min-height: 3px;z-index: 1000;;height: 2px;cursor: n-resize;"></ResizeBar>
+                    <ResizeBar @be_drag="change_output_hight" :verticalDrag="true" style="width: 100%;min-height: 5px;z-index: 1000;;height: 4px;cursor: n-resize;"></ResizeBar>
                     <div class="com-code-run-output" :style="{height:com_code_run_output_hight+'px'}" leaf="true">
                         <CodeRunOutput></CodeRunOutput>
                     </div>
                 </div>
             </div>
         </div>
-
+        </makeTheme>
     </div>
 </template>

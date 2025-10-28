@@ -17,6 +17,6 @@
     .com-root{
         width: 100%;
         height: 100%;
-        background-color: rgb(42, 42, 42);
+        background-color:  rgb(from var(--bg-color) calc(r*0.9) calc(g*0.9) calc(b*0.9));
     }
 </style>

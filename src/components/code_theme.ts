@@ -3,16 +3,16 @@ import { defineStore } from "pinia";
 import { type Ref,ref } from "vue";
 
 export const highlighter = defineStore("highlighter",()=>{
-    const js:Ref<HighlighterGeneric<BundledLanguage, BundledTheme>|null> = ref(null);
+    const light:Ref<HighlighterGeneric<BundledLanguage, BundledTheme>|null> = ref(null);
     const isInitialized = ref(false);
     createHighlighter({
-        themes: ['nord'],
-        langs: ['javascript'],
+        themes: ['nord','dark-plus'],
+        langs: ['javascript','python',"js","py",'txt','md'],
     }).then(re=>{
-        js.value=re;
+        light.value=re;
         isInitialized.value = true;
     });
-    return {js,isInitialized}
+    return {light,isInitialized}
 })
 
 

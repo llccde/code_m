@@ -7,10 +7,22 @@
     const props = defineProps<{
         file: openedFile
     }>()
-
+    
     const opened = openedFilesStore();
     const files = useFileStore();
-    const iconsStore = useIconsStore(); // 使用 icons store
+    const iconsStore = useIconsStore();
+    const alive = computed(()=>{
+        try{
+            var i = files.resolvePath(props.file.path);
+            if(i == null){
+                return false
+            }else{
+                return true
+            }
+        }catch{
+            return false;
+        }
+    })
     const emit = defineEmits<{
         (e: "closeClick", saved: boolean): void
     }>()
@@ -41,7 +53,10 @@
 <template>
     <div :class="['button-root', opened.currentPage == props.file.path ? 'be-choice' : '']" @click="choiceMe">
         <i :class="fileIcon" :style="{ color: fileColor, fontSize: '16px' }"></i>
-        <div class="file-name">
+        <div v-if="alive" class="file-name" :style="{}">
+            {{ props.file.name }}
+        </div>
+        <div v-if="!alive" class="file-name" style="color: rgb(200, 100, 100);">
             {{ props.file.name }}
         </div>
         <div class="close-button" style="font-weight: lighter;" @click.stop="closeClick">
@@ -58,8 +73,8 @@
         height: 100%;
         align-items: center;
         justify-content: center;
-        border: solid 1px rgb(154, 154, 154);
-        color: rgb(228, 228, 228);
+        border: solid 1px var(--border-color);
+        color: var(--text-color);
         padding: 0 8px;
     }
     
@@ -68,12 +83,12 @@
     }
     
     .button-root:hover {
-        background-color: rgba(240, 248, 255, 0.053);
+        background-color: rgba(255, 255, 255, 0.053);
     }
     
     .be-choice {
         background-color: rgba(240, 248, 255, 0.053);
-        border-top: 2px solid rgb(0, 102, 255);
+        border-top: 2px solid var(--accent-color);
     }
     
     .button-root:hover .close-button {
@@ -93,7 +108,7 @@
     
     .close-button {
         border: none;
-        color: white;
+        color: var(--text-color);
         cursor: pointer;
         display: flex;
         align-items: center;

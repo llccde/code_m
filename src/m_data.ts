@@ -16,6 +16,7 @@ export interface BaseNode {
     parent: FolderNode | null;
     type: FileOrFolder;
     name: string;
+    alive:boolean
 }
 
 export interface FileNode extends BaseNode {
@@ -27,12 +28,6 @@ export interface FolderNode extends BaseNode {
     type: FileOrFolder.Folder;
     children: Array<FileNode | FolderNode>;
 }
-export interface openedFile{
-    path:string;
-    content:Array<string>;
-    saved:boolean;
-    name:string;
-}
 
 // 创建默认文件结构
 const createDefaultFile = (): FolderNode => {
@@ -40,22 +35,27 @@ const createDefaultFile = (): FolderNode => {
         parent: null,
         type: FileOrFolder.Folder,
         name: "rootFolder",
+        alive:true,
         children: [
             {
                 parent: null,
                 type: FileOrFolder.Folder,
                 name: "assert",
+                alive:true,
                 children: [
                     {
                         parent: null,
                         type: FileOrFolder.File,
                         name: "main.py",
+                        alive:true,
                         content: 'a=1124\nprint("hello"+a)\nif(true):\n    a=2233\n    a++'
+
                     },
                     {
                         parent: null,
                         type: FileOrFolder.File,
                         name: "code.js",
+                        alive:true,
                         content: [
                             "const a:Number=114514;",
                             "var add=(a,b)=>{return a+b;}",
@@ -68,17 +68,20 @@ const createDefaultFile = (): FolderNode => {
                 parent: null,
                 type: FileOrFolder.File,
                 name: "readme.md",
+                alive:true,
                 content: "# title \n ## I'm a readme file\n so on~"
             },
             {
                 parent: null,
                 type: FileOrFolder.Folder,
                 name: "src",
+                alive:true,
                 children: [
                     {
                         parent: null,
                         type: FileOrFolder.File,
                         name: "main.py",
+                        alive:true,
                         content: 'a=1124\nprint("hello"+a)\nif(true):\n    a=2233\n    a++'
                     }
                 ]
@@ -177,32 +180,66 @@ export const useFileStore = defineStore("fileData", () => {
             return null
         }
     }
-    // 添加文件/文件夹的方法
-    const addFile = (path: string, name: string, content: string = ''): void => {
-        const result = resolvePath(path);
-        if (!result.f || result.f.type !== FileOrFolder.Folder) {
-            throw new Error(`Cannot add file to non-folder: ${path}`);
-        }
+    
+
+    const addFile = (folder:FolderNode, name: string, content: string = ''): void => {
         
-        const parentFolder = result.f as FolderNode;
-        parentFolder.children.filter((f)=>{f.name!=name});
+        if(folder.children.findIndex((f)=>{return f.name==name})!=-1){
+            throw Error("name repeat")
+        }
         const newFile: FileNode = {
-            parent: parentFolder,
+            alive:true,
+            parent: folder,
             type: FileOrFolder.File,
-            name,
-            content
+            name : name,
+            content:""
         };
         
-        parentFolder.children.push(newFile);
+        folder.children.push(newFile);
         triggerRef(folderStructure)
     }
-
+    const addFolder = (pfolder:FolderNode, name: string ): void => {
+        
+        if(pfolder.children.findIndex((f)=>{return f.name==name})!=-1){
+            throw Error("name repeat")
+        }
+        const newFolder: FolderNode = {
+            alive:true,
+            parent: pfolder,
+            type: FileOrFolder.Folder,
+            children:[],
+            name:name,
+        };
+        
+        pfolder.children.push( newFolder);
+        triggerRef(folderStructure)
+    }
+    const m_triggerRef = ()=>{
+        triggerRef(folderStructure)
+    }
+    const m_delete = (f:BaseNode)=>{
+        f.alive = false;
+        if(f.type==FileOrFolder.File){
+            f.parent?.children.slice(f.parent.children.findIndex((v)=>{v===f}),1);
+        }
+        else{
+            var i:any
+            for(i in (f as FolderNode).children){
+                m_delete(i as BaseNode);
+            }
+            f.alive = false;
+            f.parent?.children.slice(f.parent.children.findIndex((v)=>{v===f}),1);
+        }
+    }
     return {
         folderStructure,
         resolvePath,
         getFileContent,
         getFolderChildren,
         addFile,
-        getNameOf
+        getNameOf,
+        addFolder,
+        m_triggerRef
+
     };
 });
