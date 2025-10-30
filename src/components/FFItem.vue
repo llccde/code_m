@@ -53,7 +53,13 @@
         if(me!=null){
             if(isFolder.value){
                 var paths = (me.value as FolderNode).children.map((node)=>{
-                    return props.path+node.name+"/";
+                    if(node.type == FileOrFolder.Folder){
+                        return props.path+node.name+"/";
+                    }
+                    else{
+                        return props.path+node.name;
+                    }
+                    
                 })
                 return paths;
             }

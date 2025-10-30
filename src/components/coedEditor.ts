@@ -21,6 +21,7 @@ export const openedFilesStore=defineStore("openedFilesStore",()=>{
         }
     }
     const currentPage:Ref<string|null> = ref(null)
+    
     const setCurrentPage = (data:string|null)=>{
         if(data!=null&&openedFiles.value.findIndex(p=>p.value.path==data) == -1){
             throw Error("file was not open")

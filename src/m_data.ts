@@ -48,7 +48,10 @@ const createDefaultFile = (): FolderNode => {
                         type: FileOrFolder.File,
                         name: "main.py",
                         alive:true,
-                        content: 'a=1124\nprint("hello"+a)\nif(true):\n    a=2233\n    a++'
+                        content: [
+                            "a=233",
+                            "print(\'hello\',a)"
+                        ].join("\n")
 
                     },
                     {
@@ -155,6 +158,15 @@ export const useFileStore = defineStore("fileData", () => {
         return { f: currentFolder };
     }
 
+
+    const saveFile=(path:string,content:string)=>{
+        
+        var t = resolvePath(path);
+        
+        console.log(content);
+        (t.f as FileNode).content = content;
+        console.log(t);
+    }
     // 添加一些有用的方法
     const getFileContent = (path: string): string => {
         const result = resolvePath(path);
@@ -231,6 +243,22 @@ export const useFileStore = defineStore("fileData", () => {
             f.parent?.children.slice(f.parent.children.findIndex((v)=>{v===f}),1);
         }
     }
+    const executePythonCode = async (code: string) => {
+        if (inElectronFlag && window.electronAPI) {
+            try {
+                const result = await window.electronAPI.runPythonCode(code);
+                console.log('Python 执行结果:', result);
+                return result;
+            } catch (error) {
+                console.error('执行 Python 代码时出错:', error);
+                throw error;
+            }
+        } else {
+                console.warn('不在 Electron 环境中，无法执行 Python 代码');
+                return null;
+        }
+    };
+
     return {
         folderStructure,
         resolvePath,
@@ -239,7 +267,8 @@ export const useFileStore = defineStore("fileData", () => {
         addFile,
         getNameOf,
         addFolder,
-        m_triggerRef
-
+        m_triggerRef,
+        saveFile,
+        executePythonCode
     };
 });

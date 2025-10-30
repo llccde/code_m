@@ -7,7 +7,17 @@
     type Theme = typeof themes[number];
     
     const current = ref<Theme>("dark");
-    
+    const currentCodeStyle= ref("dark-plus");
+    const styles = ref(['nord',"dark-plus"]);
+    const setCodeStyle=(index:number)=>{    
+        var s= styles.value[index];
+        if(!s){
+            currentCodeStyle.value = styles.value[0] as string;
+        }else{
+            currentCodeStyle.value = s;
+        }
+        
+    }
     // 设置主题的函数
     const setTheme = (name: Theme) => {
         if (themes.includes(name)) {
@@ -18,6 +28,10 @@
     // 提供主题相关功能给子组件
     provide("setTheme", setTheme);
     provide("currentTheme", current);
+    provide("themes",themes);
+    provide("setCodeStyle",setCodeStyle);
+    provide("styles",styles);
+    provide("currentStyle",currentCodeStyle)
 </script>
 
 <template>

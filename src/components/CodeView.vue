@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { openedFilesStore, type openedFile } from './coedEditor';
-    import { defineProps, ref, type Ref, computed, onMounted, onUpdated, nextTick } from 'vue';
+    import { defineProps, ref, type Ref, computed, onMounted, onUpdated, nextTick, inject } from 'vue';
     import { useFileStore, type FileNode } from '@/m_data';
     import { highlighter } from './code_theme';
 	import type { BundledLanguage } from 'shiki';
@@ -9,7 +9,7 @@
     const opens = openedFilesStore();
     const files = useFileStore();
     const props = defineProps<{path: string}>();
-    
+    const currentCodeStyle = inject<Ref<string>>('currentStyle')
 
     const frontRef = ref<HTMLElement | null>(null);
     const inputRef = ref<HTMLElement | null>(null);
@@ -48,7 +48,7 @@
 			try {
 				const result = HL.light?.codeToTokens(content.value, {
 					lang: type.value as BundledLanguage,
-					theme: 'dark-plus'
+					theme: currentCodeStyle?.value as string,
 				});
 				if (!result) {
 					throw new Error('Highlighter returned null or undefined');
@@ -163,15 +163,14 @@
     };
 	const save=()=>{
 		
-			var i = files.resolvePath(props.path);
-			if(! i ){
-				throw Error();
-			}
-
-			(i as unknown as FileNode).content = file.value.content;
+            files.saveFile(props.path,file.value.content);
 			hideContextMenu();
+            console.log();
 		
 	}
+    const runCode = ()=>{
+
+    }
     onMounted(() => {
         updateInputHeight_and_Width();
         
@@ -187,6 +186,7 @@
 
 <template>
     <div class="code-page" ref="page">
+        
         <div id="front" ref="frontRef">
             <template v-for="line,index in color?.tokens" :key="index">
                 <div class="code-line">
@@ -225,6 +225,12 @@
 </template>
 
 <style lang="css" scoped>
+    .run{
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 999;
+    }
     .code-text-style {
         font-family: monospace;
         font-size: 16px;

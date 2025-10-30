@@ -9,10 +9,12 @@ import ComHead from './components/com-head.vue'
 import comBodyCodeViewAndNav from './components/com-body-codeView-and-nav.vue'
 import ResizeBar from './components/ResizeBar.vue'
 import { onMounted,computed } from 'vue'
-import { ref } from 'vue'
+import { ref ,provide} from 'vue'
 import makeTheme from './components/make-theme.vue'
 import toolShow from './components/tool-show.vue'
 import comBodyThemeView from './components/com-body-themeView.vue'
+
+console.log(window)
 const com_body_left_width=ref(300);
 const com_code_run_output_hight=ref(200);
 const change_body_left_width=(d)=>{
@@ -41,6 +43,12 @@ onMounted(()=>{
     console.log("App mounted");
 
 })
+const output = ref("");
+const showOutPut = (s)=>{
+    output.value = s;
+}
+provide("showOutput",showOutPut)
+
 </script>
 <style scoped>
     .head{
@@ -164,7 +172,7 @@ onMounted(()=>{
                     </comBodyCodeViewAndNav>
                     <ResizeBar @be_drag="change_output_hight" :verticalDrag="true" style="width: 100%;min-height: 5px;z-index: 1000;;height: 4px;cursor: n-resize;"></ResizeBar>
                     <div class="com-code-run-output" :style="{height:com_code_run_output_hight+'px'}" leaf="true">
-                        <CodeRunOutput></CodeRunOutput>
+                        <CodeRunOutput :text="output" ></CodeRunOutput>
                     </div>
                 </div>
             </div>
